@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>React</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src='https://unpkg.com/babel-standalone@6/babel.min.js'></script>
+</head>
+
+<body>
+<div id="app"></div>
+<script type="text/babel">
+function FriendsList(props) {
+  return(
+    <ul>
+      {
+        props.list.map((name)=>(
+          <li key={name}>
+            <span>{name}</span>
+            <button onClick = {()=> props.onRemoveFriend(name)}>Remove</button>
+          </li>
+        ))
+      }
+    </ul>
+  )  
+}
+class App extends React.Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            friends: ["meryam", "alex", "hicham", "hamza"],
+            input: ""
+        }
+        this.handleRemoveFriend = this.handleRemoveFriend.bind(this)
+        this.updateInput = this.updateInput.bind(this)
+        this.handleAddFriend = this.handleAddFriend.bind(this)
+    }
+    handleAddFriend(){
+        this.setState((curentState)=>{
+            return{
+                friends: curentState.friends.concat([curentState.input]),
+                input: ""
+            }
+        })
+    }
+    handleRemoveFriend(name){
+        this.setState((curentState)=>{
+            return{
+                friends: curentState.friends.filter((friend)=> friend!== name)
+            }
+        })
+    }
+    updateInput(e){
+        const value = e.target.value
+
+        this.setState({
+            input: value
+        })
+    }
+    render(){
+        return (
+            <div>
+                <input
+                    type="text"
+                    placeolder="type a new friend here"
+                    value={this.state.input}
+                    onChange={this.updateInput}
+                    />
+                <button onClick = {this.handleAddFriend}>Add</button>
+                <h2>Active friends</h2>
+                <FriendsList 
+                    list={this.state.friends}
+                    onRemoveFriend= {this.handleRemoveFriend}
+                />
+                <h2>Inactive friends</h2>
+            </div>
+        )
+    }
+}
+ReactDOM.render(<App />, document.getElementById("app"));
+    </script>
+</body>
+</html>
